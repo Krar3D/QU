@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>منصة اختبارات الاقتصاد الجزئي</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg-soft: #162033;
+    --card: #1e293b;
+    --card-hover: #263449;
+    --border: #334155;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --primary: #38bdf8;
+    --primary-bg: rgba(56, 189, 248, 0.14);
+    --accent: #818cf8;
+    --success: #10b981;
+    --success-bg: rgba(16, 185, 129, 0.14);
+    --danger: #f43f5e;
+    --danger-bg: rgba(244, 63, 94, 0.14);
+    --warning: #f59e0b;
+    --warning-bg: rgba(245, 158, 11, 0.14);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    --radius: 16px;
+    --font-scale: 1;
+  }
+
+  [data-theme="light"] {
+    --bg: #f1f5f9;
+    --bg-soft: #e2e8f0;
+    --card: #ffffff;
+    --card-hover: #f8fafc;
+    --border: #cbd5e1;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --primary: #0284c7;
+    --primary-bg: rgba(2, 132, 199, 0.1);
+    --accent: #4f46e5;
+    --success: #059669;
+    --success-bg: rgba(5, 150, 105, 0.1);
+    --danger: #e11d48;
+    --danger-bg: rgba(225, 29, 72, 0.1);
+    --warning: #d97706;
+    --warning-bg: rgba(217, 119, 6, 0.12);
+    --shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+  }
+
+  [data-theme="sepia"] {
+    --bg: #f4ecd8;
+    --bg-soft: #ebe0c5;
+    --card: #fbf6e9;
+    --card-hover: #f2e8cf;
+    --border: #d9c8a9;
+    --text: #3d3124;
+    --text-muted: #75634d;
+    --primary: #9a5b13;
+    --primary-bg: rgba(154, 91, 19, 0.12);
+    --accent: #7c4a15;
+    --success: #2d7a4b;
+    --success-bg: rgba(45, 122, 75, 0.12);
+    --danger: #b83232;
+    --danger-bg: rgba(184, 50, 50, 0.12);
+    --warning: #b4690e;
+    --warning-bg: rgba(180, 105, 14, 0.14);
+    --shadow: 0 6px 18px rgba(61, 49, 36, 0.08);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, 'Noto Sans Arabic', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: calc(16px * var(--font-scale));
+    min-height: 100vh;
+    transition: background 0.25s ease, color 0.25s ease;
+    padding-bottom: 40px;
+  }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+
+  /* Header */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    backdrop-filter: blur(10px);
+  }
+  .topbar-inner {
+    max-width: 820px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .brand-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .brand-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .brand-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: block;
+  }
+
+  .controls-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .icon-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    height: 36px;
+    min-width: 36px;
+    padding: 0 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: all 0.2s;
+  }
+  .icon-btn:hover {
+    border-color: var(--primary);
+    background: var(--card-hover);
+  }
+  .icon-btn.active {
+    background: var(--primary-bg);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  /* Views */
+  .view { display: none; animation: fadeIn 0.28s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Dashboard Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 16px 0 22px;
+  }
+  @media (max-width: 600px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .stat-val {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1.2;
+  }
+  .stat-val.success { color: var(--success); }
+  .stat-val.danger { color: var(--danger); }
+  .stat-val.warning { color: var(--warning); }
+  .stat-lbl {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Settings Box */
+  .settings-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .toggle-group input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--primary);
+    cursor: pointer;
+  }
+  .mode-pills {
+    display: flex;
+    background: var(--bg-soft);
+    border-radius: 10px;
+    padding: 3px;
+    border: 1px solid var(--border);
+  }
+  .mode-pill {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mode-pill.active {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  /* Section Headers */
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 24px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-head h2 {
+    font-size: 1.12rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-badge {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--primary-bg);
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .section-badge.monthly {
+    background: var(--warning-bg);
+    color: var(--warning);
+  }
+
+  /* Model Cards */
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .model-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .model-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+    background: var(--card-hover);
+    box-shadow: var(--shadow);
+  }
+  .model-card.monthly-card {
+    border-right: 4px solid var(--warning);
+  }
+  .model-card.regular-card {
+    border-right: 4px solid var(--primary);
+  }
+  .model-card.special-card {
+    border-right: 4px solid var(--accent);
+  }
+  .model-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .model-title {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .model-count {
+    font-size: 0.78rem;
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    padding: 3px 9px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .model-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .model-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--primary);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .best-score {
+    color: var(--success);
+    font-size: 0.78rem;
+  }
+
+  /* Quick Action Row */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .action-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 13px 14px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .action-btn:hover {
+    border-color: var(--primary);
+    background: var(--card-hover);
+  }
+  .action-btn.primary {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+  }
+  .action-btn.danger-outline {
+    border-color: rgba(244, 63, 94, 0.45);
+    color: var(--danger);
+  }
+  .action-btn.warning-outline {
+    border-color: rgba(245, 158, 11, 0.45);
+    color: var(--warning);
+  }
+  .action-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Quiz View */
+  .quiz-header {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .quiz-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .quiz-title {
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: var(--primary);
+  }
+  .quiz-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+  }
+  .pill {
+    background: var(--bg-soft);
+    padding: 4px 10px;
+    border-radius: 99px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .pill.streak {
+    background: var(--warning-bg);
+    color: var(--warning);
+  }
+  .progress-track {
+    height: 8px;
+    background: var(--bg-soft);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--success));
+    width: 0%;
+    transition: width 0.35s ease;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .q-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+  .q-source-tag {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    background: var(--bg-soft);
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+  .q-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+    line-height: 1.75;
+  }
+
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option-btn {
+    width: 100%;
+    text-align: right;
+    background: var(--bg-soft);
+    border: 2px solid transparent;
+    color: var(--text);
+    padding: 13px 14px;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 0.98rem;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.18s ease;
+    line-height: 1.5;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--primary);
+    background: var(--card-hover);
+  }
+  .option-btn:disabled {
+    cursor: default;
+  }
+  .opt-letter {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    color: var(--primary);
+  }
+  .option-btn.selected {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+  }
+  .option-btn.correct {
+    border-color: var(--success);
+    background: var(--success-bg);
+  }
+  .option-btn.correct .opt-letter {
+    background: var(--success);
+    color: #fff;
+    border-color: var(--success);
+  }
+  .option-btn.wrong {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+  }
+  .option-btn.wrong .opt-letter {
+    background: var(--danger);
+    color: #fff;
+    border-color: var(--danger);
+  }
+
+  /* Explanation Box */
+  .explanation-box {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 13px;
+    background: var(--primary-bg);
+    border-right: 4px solid var(--primary);
+    display: none;
+    animation: fadeIn 0.25s ease;
+  }
+  .explanation-box.show { display: block; }
+  .explanation-box.is-correct {
+    background: var(--success-bg);
+    border-right-color: var(--success);
+  }
+  .explanation-box.is-wrong {
+    background: var(--danger-bg);
+    border-right-color: var(--danger);
+  }
+  .exp-title {
+    font-weight: 800;
+    font-size: 0.92rem;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .exp-text {
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Quiz Nav */
+  .quiz-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 11px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.92rem;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover:not(:disabled) {
+    border-color: var(--primary);
+  }
+  .nav-btn.primary {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Question Map */
+  .q-map-wrap {
+    margin-top: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    display: none;
+  }
+  .q-map-wrap.show { display: block; }
+  .q-map-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .q-dot {
+    height: 36px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  .q-dot.current { border: 2px solid var(--primary); color: var(--primary); }
+  .q-dot.answered { background: var(--primary-bg); border-color: var(--primary); }
+  .q-dot.correct { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+  .q-dot.wrong { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+
+  /* Results View */
+  .result-hero {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 18px;
+    text-align: center;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .score-ring {
+    width: 132px;
+    height: 132px;
+    margin: 0 auto 14px;
+    position: relative;
+  }
+  .score-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  .score-ring circle {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+  }
+  .ring-bg { stroke: var(--bg-soft); }
+  .ring-fg { stroke: var(--success); transition: stroke-dashoffset 0.8s ease; }
+  .score-percent {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+  }
+  .result-msg {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .result-sub {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+  }
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .r-stat {
+    background: var(--bg-soft);
+    padding: 10px 16px;
+    border-radius: 12px;
+    min-width: 95px;
+  }
+  .r-stat b { display: block; font-size: 1.2rem; }
+  .r-stat span { font-size: 0.78rem; color: var(--text-muted); }
+
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .filter-chip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 99px;
+    cursor: pointer;
+    font-size: 0.84rem;
+    font-weight: 600;
+  }
+  .filter-chip.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  .review-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-right: 4px solid var(--border);
+  }
+  .review-card.ok { border-right-color: var(--success); }
+  .review-card.bad { border-right-color: var(--danger); }
+  .review-q { font-weight: 700; margin-bottom: 10px; }
+  .review-line { font-size: 0.88rem; margin: 4px 0; }
+  .review-exp {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--bg-soft);
+    font-size: 0.87rem;
+    color: var(--text);
+  }
+
+  /* Study Catalog View */
+  .search-box {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 13px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-size: 0.96rem;
+    font-family: inherit;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  .search-box:focus { border-color: var(--primary); }
+  .study-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .study-answer-wrap {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+  }
+  .study-answer-wrap.blurred {
+    filter: blur(6px);
+    user-select: none;
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+  .study-answer-wrap.blurred:hover { filter: blur(4px); }
+
+  .ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 36px 16px;
+    color: var(--text-muted);
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px dashed var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand" onclick="goHome()">
+      <div class="brand-icon">ق</div>
+      <div>
+        <div class="brand-title">اختبارات الاقتصاد الجزئي</div>
+        <span class="brand-sub">80 سؤالاً مع الشرح التفصيلي</span>
+      </div>
+    </div>
+    <div class="controls-bar">
+      <button class="icon-btn" id="btnFontDown" title="تصغير الخط">أ-</button>
+      <button class="icon-btn" id="btnFontUp" title="تكبير الخط">أ+</button>
+      <button class="icon-btn" id="btnSound" title="المؤثرات الصوتية">🔊</button>
+      <button class="icon-btn" id="btnTheme" title="تغيير المظهر">🌙</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- HOME VIEW -->
+  <section id="viewHome" class="view active">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-val" id="statTotal">80</div>
+        <div class="stat-lbl">إجمالي الأسئلة</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val success" id="statMastered">0</div>
+        <div class="stat-lbl">أسئلة أتقنتها</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val danger" id="statMistakes">0</div>
+        <div class="stat-lbl">في بنك الأخطاء</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val warning" id="statBookmarks">0</div>
+        <div class="stat-lbl">أسئلة محفوظة</div>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <div class="mode-pills">
+        <button class="mode-pill active" data-mode="study" onclick="setQuizMode('study')">وضع المذاكرة (شرح فوري)</button>
+        <button class="mode-pill" data-mode="exam" onclick="setQuizMode('exam')">وضع الامتحان (نتيجة بالنهاية)</button>
+      </div>
+      <div style="display:flex; gap:14px; flex-wrap:wrap;">
+        <label class="toggle-group">
+          <input type="checkbox" id="chkShuffleQ">
+          <span>خلط الأسئلة</span>
+        </label>
+        <label class="toggle-group">
+          <input type="checkbox" id="chkShuffleO" checked>
+          <span>خلط الاختيارات</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Section 1: Monthly Exams -->
+    <div class="section-head">
+      <h2>📌 نماذج الامتحان الشهري</h2>
+      <span class="section-badge monthly">40 سؤالاً</span>
+    </div>
+    <div class="models-grid" id="monthlyGrid"></div>
+
+    <!-- Section 2: Other Models -->
+    <div class="section-head">
+      <h2>📚 بقية النماذج والكوزات</h2>
+      <span class="section-badge">40 سؤالاً</span>
+    </div>
+    <div class="models-grid" id="otherGrid"></div>
+
+    <!-- Quick Actions -->
+    <div class="section-head">
+      <h2>⚡ أدوات المراجعة الذكية</h2>
+      <span class="section-badge">شامل</span>
+    </div>
+    <div class="quick-actions">
+      <button class="action-btn primary" onclick="startSpecial('all')">🎯 الاختبار الشامل (80 سؤال)</button>
+      <button class="action-btn danger-outline" id="btnReviewMistakes" onclick="startSpecial('mistakes')">🔁 تدريب على الأخطاء (<span id="mistakesBtnCount">0</span>)</button>
+      <button class="action-btn warning-outline" id="btnReviewBookmarks" onclick="startSpecial('bookmarks')">⭐ الأسئلة المحفوظة (<span id="bookmarksBtnCount">0</span>)</button>
+      <button class="action-btn" onclick="openStudyCatalog()">📖 تصفح وبحث كل الأسئلة</button>
+    </div>
+  </section>
+
+  <!-- QUIZ VIEW -->
+  <section id="viewQuiz" class="view">
+    <div class="quiz-header">
+      <div class="quiz-meta">
+        <div class="quiz-title" id="quizTitle">نموذج</div>
+        <div class="quiz-pills">
+          <span class="pill" id="quizCounter">1 / 20</span>
+          <span class="pill" id="quizTimer">00:00</span>
+          <span class="pill streak" id="quizStreak" style="display:none;">🔥 0</span>
+        </div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="question-card">
+      <div class="q-top-row">
+        <span class="q-source-tag" id="qSourceTag">النموذج</span>
+        <div style="display:flex; gap:6px;">
+          <button class="icon-btn" id="btnBookmark" onclick="toggleCurrentBookmark()" title="حفظ السؤال للمراجعة">☆ حفظ</button>
+          <button class="icon-btn" onclick="toggleMap()" title="خريطة الأسئلة">☰</button>
+        </div>
+      </div>
+      <div class="q-text" id="qText"></div>
+      <div class="options-list" id="optionsList"></div>
+      <div class="explanation-box" id="explanationBox">
+        <div class="exp-title" id="expTitle">💡 شرح الإجابة الصحيحة</div>
+        <div class="exp-text" id="expText"></div>
+      </div>
+    </div>
+
+    <div class="quiz-nav">
+      <div style="display:flex; gap:8px;">
+        <button class="nav-btn" onclick="confirmExit()">الرئيسية</button>
+        <button class="nav-btn" id="btnPrev" onclick="prevQuestion()">السابق</button>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="nav-btn primary" id="btnNext" onclick="nextQuestion()">التالي</button>
+        <button class="nav-btn primary" id="btnFinish" onclick="finishQuiz()" style="display:none;">إنهاء وعرض النتيجة</button>
+      </div>
+    </div>
+
+    <div class="q-map-wrap" id="qMapWrap">
+      <div style="font-size:0.85rem; color:var(--text-muted); font-weight:700;">خريطة الأسئلة (اضغط للانتقال السريع):</div>
+      <div class="q-map-grid" id="qMapGrid"></div>
+    </div>
+  </section>
+
+  <!-- RESULTS VIEW -->
+  <section id="viewResults" class="view">
+    <div class="result-hero">
+      <div class="score-ring">
+        <svg viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+          <circle class="ring-fg" id="ringFg" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
+        </svg>
+        <div class="score-percent" id="resPercent">0%</div>
+      </div>
+      <div class="result-msg" id="resMsg">أحسنت!</div>
+      <div class="result-sub" id="resSub"></div>
+      <div class="result-stats">
+        <div class="r-stat"><b style="color:var(--success)" id="resCorrect">0</b><span>صحيحة</span></div>
+        <div class="r-stat"><b style="color:var(--danger)" id="resWrong">0</b><span>خاطئة</span></div>
+        <div class="r-stat"><b style="color:var(--primary)" id="resTime">00:00</b><span>الوقت</span></div>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <button class="nav-btn primary" id="btnRetryWrong" onclick="retryWrongOnly()" style="display:none;">🔁 إعادة الأسئلة الخاطئة فقط</button>
+        <button class="nav-btn" onclick="retryCurrentQuiz()">🔄 إعادة الاختبار</button>
+        <button class="nav-btn" onclick="goHome()">🏠 الرئيسية</button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="filterReview('all', this)">الكل</button>
+      <button class="filter-chip" onclick="filterReview('wrong', this)">الأخطاء فقط</button>
+      <button class="filter-chip" onclick="filterReview('correct', this)">الصحيحة فقط</button>
+    </div>
+    <div id="reviewList"></div>
+  </section>
+
+  <!-- STUDY CATALOG VIEW -->
+  <section id="viewCatalog" class="view">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
+      <h2 style="font-size:1.15rem;">📖 بنك الأسئلة والشروحات (80 سؤالاً)</h2>
+      <div style="display:flex; gap:8px;">
+        <button class="icon-btn" id="btnHideAnswers" onclick="toggleHideCatalogAnswers()">👁️ إخفاء الإجابات</button>
+        <button class="icon-btn" onclick="goHome()">← رجوع</button>
+      </div>
+    </div>
+    <input type="text" class="search-box" id="catalogSearch" placeholder="ابحث عن كلمة في السؤال أو الشرح (مثلاً: مرونة القوس، الإيراد الحدي، الدنيا)..." oninput="renderCatalog()">
+    <div class="filter-bar" id="catalogFilters"></div>
+    <div id="catalogList"></div>
+  </section>
+
+</main>
+
+<script>
+const MODELS = [
+  { id: 'monthly_a', group: 'monthly', title: 'نموذج A امتحان الشهري', desc: 'المرونات، الإيراد الكلي والحدي، وتوازن السوق' },
+  { id: 'monthly_b', group: 'monthly', title: 'نموذج B امتحان الشهري', desc: 'مرونة العرض والطلب، الدوال، وتغيرات التوازن' },
+  { id: 'eq_a1', group: 'other', title: 'نموذج A1 (المرونة والعرض والتوازن)', desc: 'مرونة القوس، الضرائب، وفائض العرض' },
+  { id: 'eq_a2', group: 'other', title: 'نموذج A2 (المرونة والعرض والتوازن)', desc: 'مستلزمات الإنتاج، فائض الطلب، والكمية المعروضة' },
+  { id: 'quiz_a1', group: 'other', title: 'نموذج A1', desc: 'السلع البديلة والمكملة، المرونة الدخلية، والإيراد' },
+  { id: 'quiz_a2', group: 'other', title: 'نموذج A2', desc: 'السلع الرديئة، التوقعات السعرية، ودرجات المرونة' },
+  { id: 'quiz_a3', group: 'other', title: 'نموذج A3', desc: 'السلع المستقلة والاستفزازية، وقانون الإيراد الحدي' }
+];
+
+const QUESTIONS = [
+  // ================= نموذج A امتحان الشهري (20) =================
+  {
+    id: 'ma_1', model: 'monthly_a',
+    q: 'اذا كان ناتج مرونة الطلب التقاطعية سالب فهذا يعني ان السلعتين',
+    opts: ['مكملتان', 'بديلتان', 'مستقلتان', 'ضروريتان'],
+    ans: 0,
+    exp: 'عندما تكون مرونة الطلب التقاطعية سالبة، فإن ارتفاع سعر السلعة الأولى يؤدي إلى انخفاض الطلب على السلعة الثانية (علاقة عكسية)، وهذا هو حال السلع المكملة مثل الشاي والسكر أو السيارة والوقود.'
+  },
+  {
+    id: 'ma_2', model: 'monthly_a',
+    q: 'عند ارتفاع سعر سلعة ذات طلب عالي المرونة فان الايراد الكلي',
+    opts: ['يرتفع', 'ينخفض', 'يبقى ثابت', 'ليس كل ما سبق'],
+    ans: 1,
+    exp: 'في الطلب عالي المرونة (المرن) تكون العلاقة بين السعر والإيراد الكلي عكسية؛ لأن نسبة انخفاض الكمية المباعة تكون أكبر من نسبة ارتفاع السعر، فينخفض الإيراد الكلي.'
+  },
+  {
+    id: 'ma_3', model: 'monthly_a',
+    q: 'في حالة ارتفاع السعر بنسبة 2% وارتفاع الكمية المعروضة بنسبة 5% فان العرض',
+    opts: ['لا نهائي المرونة', 'واطئ المرونة', 'عديم المرونة', 'عالي المرونة'],
+    ans: 3,
+    exp: 'مرونة العرض تساوي التغير النسبي في الكمية المعروضة مقسوماً على التغير النسبي في السعر: 5% ÷ 2% = 2.5، وبما أن الناتج أكبر من 1 فالعرض عالي المرونة.'
+  },
+  {
+    id: 'ma_4', model: 'monthly_a',
+    q: 'تستخدم مرونة القوس بصفة أساسية لقياس المرونة السعرية للطلب عندما تكون التغيرات بين النقطتين',
+    opts: ['كبيرة', 'عديمة', 'صغيرة', 'لا نهائية'],
+    ans: 0,
+    exp: 'مرونة القوس (المرونة المتوسطة) تُستخدم لقياس المرونة بين نقطتين متباعدتين عندما تكون التغيرات في السعر والكمية كبيرة، بخلاف مرونة النقطة التي تُستخدم للتغيرات المتناهية الصغر.'
+  },
+  {
+    id: 'ma_5', model: 'monthly_a',
+    q: 'اذا كان التغير في السعر قد ادى الى تغير اكبر في الكمية المطلوبة فهذا يعني ان الطلب',
+    opts: ['لا نهائي المرونة', 'عالي المرونة', 'قليل المرونة', 'عديم المرونة'],
+    ans: 1,
+    exp: 'عندما يكون التغير النسبي في الكمية المطلوبة أكبر من التغير النسبي في السعر، يكون معامل المرونة أكبر من الواحد الصحيح، أي أن الطلب عالي المرونة (مرن).'
+  },
+  {
+    id: 'ma_6', model: 'monthly_a',
+    q: 'في حالة ارتفاع منحنى الطلب مع ثبات منحنى العرض ذلك يؤدي الى',
+    opts: ['انخفاض الكمية', 'ثبات الاسعار', 'انخفاض الاسعار', 'ارتفاع الاسعار'],
+    ans: 3,
+    exp: 'انتقال منحنى الطلب للأعلى (لليمين) مع بقاء العرض ثابتاً يخلق فائض طلب عند السعر القديم، مما يدفع السعر التوازني والكمية التوازنية إلى الارتفاع.'
+  },
+  {
+    id: 'ma_7', model: 'monthly_a',
+    q: 'اذا كان الطلب قليل المرونة فان الايراد الحدي:',
+    opts: ['موجب', 'سالب', 'صفر', 'ليس كل ما سبق'],
+    ans: 1,
+    exp: 'حسب العلاقة بين الإيراد الحدي والمرونة، عندما يكون الطلب قليل المرونة (أقل من 1) فإن بيع وحدة إضافية يتطلب خفض السعر بنسبة أكبر من زيادة الكمية، فيصبح الإيراد الحدي سالباً.'
+  },
+  {
+    id: 'ma_8', model: 'monthly_a',
+    q: 'عندما يكون التغير النسبي في السعر لا يؤدي الى تغير نسبي في الكمية المطلوبة فان منحنى الطلب يكون على شكل:',
+    opts: ['افقي', 'موجب الميل', 'سالب الميل', 'عمودي'],
+    ans: 3,
+    exp: 'عدم استجابة الكمية المطلوبة لأي تغير في السعر يعني أن الطلب عديم المرونة (تساوي صفر)، ويُرسَم منحناه بشكل خط عمودي موازٍ لمحور السعر.'
+  },
+  {
+    id: 'ma_9', model: 'monthly_a',
+    q: 'في حالة زيادة الدخل وانخفاض الكمية المطلوبة فهذا يعني ان السلعة',
+    opts: ['كمالية', 'ضرورية', 'رديئة', 'اعتيادية'],
+    ans: 2,
+    exp: 'السلعة الرديئة (الدنيا) ترتبط بعلاقة عكسية مع دخل المستهلك؛ فكلما زاد الدخل يتحول المستهلك عنها إلى سلع أفضل جودة فتقل الكمية المطلوبة منها.'
+  },
+  {
+    id: 'ma_10', model: 'monthly_a',
+    q: 'في حالة زيادة الاعانات المدفوعة فان الكمية المعروضة',
+    opts: ['تزداد', 'تنخفض', 'تبقى ثابتة', 'ليس كل ما سبق'],
+    ans: 0,
+    exp: 'الإعانات الحكومية تخفّض تكاليف الإنتاج على المنتجين، مما يشجعهم على زيادة الإنتاج فتزداد الكمية المعروضة في السوق.'
+  },
+  {
+    id: 'ma_11', model: 'monthly_a',
+    q: 'في حالة ارتفاع الكمية المعروضة مع ثبات الكمية المطلوبة ذلك يؤدي الى',
+    opts: ['انخفاض الكمية', 'ارتفاع السعر', 'انخفاض السعر', 'ثبات السعر'],
+    ans: 2,
+    exp: 'زيادة العرض مع ثبات الطلب تؤدي إلى حدوث فائض في العرض داخل السوق، مما يضغط على السعر التوازني نحو الانخفاض.'
+  },
+  {
+    id: 'ma_12', model: 'monthly_a',
+    q: 'يعتبر الدخل في دالة الطلب متغير',
+    opts: ['تابع', 'مستقل', 'ثابت', 'ليس كل ما ذكر'],
+    ans: 1,
+    exp: 'في دالة الطلب، الكمية المطلوبة هي المتغير التابع، أما العوامل المؤثرة فيها (مثل السعر والدخل والذوق) فهي متغيرات مستقلة.'
+  },
+  {
+    id: 'ma_13', model: 'monthly_a',
+    q: 'اذا كان التغير على نفس منحنى العرض فهذا يعني',
+    opts: ['تغير في الكمية المعروضة', 'تغير في العرض', 'ثبات سعر السلعة', 'ارتفاع سعر السلعة'],
+    ans: 0,
+    exp: 'الانتقال من نقطة إلى أخرى على نفس منحنى العرض يحدث بسبب تغير سعر السلعة نفسها فقط، ويُسمى «التغير في الكمية المعروضة».'
+  },
+  {
+    id: 'ma_14', model: 'monthly_a',
+    q: 'في حالة انخفاض الكمية المعروضة مع ثبات الكمية المطلوبة ذلك يؤدي الى',
+    opts: ['زيادة الكمية', 'انخفاض السعر', 'انخفاض الكمية', 'ثبات السعر'],
+    ans: 2,
+    exp: 'تراجع العرض مع ثبات الطلب ينقل نقطة التوازن نحو كمية توازنية أقل (انخفاض الكمية) وسعر توازني أعلى.'
+  },
+  {
+    id: 'ma_15', model: 'monthly_a',
+    q: 'في حالة انخفاض منحنى الطلب مع ثبات منحنى العرض ذلك يؤدي الى',
+    opts: ['ارتفاع الاسعار', 'انخفاض الاسعار', 'ثبات الاسعار', 'ليس كل ما سبق'],
+    ans: 1,
+    exp: 'انتقال منحنى الطلب للأسفل (لليسار) مع ثبات العرض يؤدي إلى انخفاض السعر التوازني والكمية التوازنية معاً.'
+  },
+  {
+    id: 'ma_16', model: 'monthly_a',
+    q: 'اذا زادت الكمية المطلوبة بنسبة 20% وزادت الكمية المعروضة بنسبة 15% ذلك يؤدي الى',
+    opts: ['زيادة الكميات', 'ارتفاع الاسعار', 'انخفاض الاسعار', 'ثبات الكميات والاسعار'],
+    ans: 0,
+    exp: 'عندما يرتفع كل من الطلب والعرض معاً فإن النتيجة المؤكدة دائماً هي زيادة الكمية التوازنية في السوق (وهي الإجابة المعتمدة في النموذج).'
+  },
+  {
+    id: 'ma_17', model: 'monthly_a',
+    q: 'في حالة زيادة الكمية المعروضة بنسبة 10% وانخفاض الكمية المطلوبة بنسبة 6% ذلك يؤدي الى',
+    opts: ['ارتفاع الكميات', 'ارتفاع الاسعار', 'انخفاض الكمية المطلوبة', 'لا يوجد تغير'],
+    ans: 0,
+    exp: 'بما أن نسبة زيادة العرض (10%) أكبر من نسبة انخفاض الطلب (6%)، فإن صافي الأثر على الكمية التوازنية يكون موجباً فترتفع الكميات المتداولة وينخفض السعر.'
+  },
+  {
+    id: 'ma_18', model: 'monthly_a',
+    q: 'عند انخفاض سعر السلعة الدنيا فان ذلك يؤدي الى',
+    opts: ['زيادة الكمية المطلوبة', 'تبقى ثابتة', 'انخفاض الكمية المطلوبة', 'ليس كل ما سبق'],
+    ans: 2,
+    exp: 'السلع الدنيا (الرديئة/سِلع جيفن) تُعد من استثناءات قانون الطلب؛ فعند انخفاض سعرها يزداد الدخل الحقيقي للمستهلك فيقلل استهلاكه منها ويتجه لسلع أفضل.'
+  },
+  {
+    id: 'ma_19', model: 'monthly_a',
+    q: 'اذا زادت مرونة منحنى الطلب بنسبة 8% وزادت مرونة منحنى العرض بنسبة 12% ذلك يؤدي الى',
+    opts: ['انخفاض الاسعار', 'ارتفاع الاسعار', 'ثبات الاسعار', 'انخفاض الكميات'],
+    ans: 0,
+    exp: 'زيادة مرونة منحنى العرض تميل إلى خفض السعر التوازني، وبما أن زيادة مرونة العرض (12%) أكبر من زيادة مرونة الطلب (8%)، يغلب أثر العرض فتنخفض الأسعار.'
+  },
+  {
+    id: 'ma_20', model: 'monthly_a',
+    q: 'عند ارتفاع سعر السلعة X يؤثر ذلك على السلعة البديلة Y فيؤدي الى',
+    opts: ['ارتفاع الاسعار', 'انخفاض الاسعار', 'انخفاض الكميات', 'زيادة الكميات'],
+    ans: 0,
+    exp: 'ارتفاع سعر السلعة X يدفع المستهلكين للتحول نحو السلعة البديلة Y، فيزداد الطلب عليها وينتقل منحنى طلبها لليمين مما يؤدي إلى ارتفاع سعرها (الإجابة المعتمدة في النموذج).'
+  },
+
+  // ================= نموذج B امتحان الشهري (20) =================
+  {
+    id: 'mb_1', model: 'monthly_b',
+    q: 'اذا تغير السعر بنسبة 3% وادى ذلك الى تغير الكمية المعروضة بنسبة 1% فان العرض يكون',
+    opts: ['عالي المرونة', 'لا نهائي المرونة', 'قليل المرونة', 'عديم المرونة'],
+    ans: 2,
+    exp: 'مرونة العرض = 1% ÷ 3% = 0.33، وبما أن القيمة أقل من 1 (وأكبر من صفر) فإن العرض يكون قليل المرونة.'
+  },
+  {
+    id: 'mb_2', model: 'monthly_b',
+    q: 'عند حدوث تغيرات متناهية الصغر في السعر والكمية المطلوبة، فيمكن قياسها من خلال:',
+    opts: ['مرونة القوس', 'مرونة النقطة', 'المرونة التقاطعية', 'المرونة الدخلية'],
+    ans: 1,
+    exp: 'تُستخدم مرونة النقطة لقياس درجة استجابة الكمية المطلوبة عند نقطة محددة على المنحنى عندما تكون التغيرات في السعر والكمية صغيرة جداً (متناهية الصغر).'
+  },
+  {
+    id: 'mb_3', model: 'monthly_b',
+    q: 'في حالة ثبات السعر وتغيرات العوامل الأخرى فهذا يعني',
+    opts: ['تغير في الكمية المعروضة', 'تغير في العرض', 'انخفاض سعر السلعة', 'ارتفاع سعر السلعة'],
+    ans: 1,
+    exp: 'ثبات سعر السلعة وتغير محددات العرض الأخرى (كالتكاليف أو الضرائب أو التكنولوجيا) يؤدي إلى انتقال منحنى العرض بالكامل، وهو ما يُعرف بـ «التغير في العرض».'
+  },
+  {
+    id: 'mb_4', model: 'monthly_b',
+    q: 'في حالة ارتفاع منحنى الطلب مع ثبات منحنى العرض ذلك يؤدي الى',
+    opts: ['ثبات الاسعار', 'انخفاض الاسعار', 'ارتفاع الاسعار', 'ليس كل ما سبق'],
+    ans: 2,
+    exp: 'عندما يرتفع الطلب مع بقاء العرض على حاله، تزداد المنافسة بين المشترين على الكمية المتاحة مما يرفع السعر التوازني.'
+  },
+  {
+    id: 'mb_5', model: 'monthly_b',
+    q: 'في حالة زيادة مرونة منحنى العرض بنسبة 10% وزيادة مرونة منحنى الطلب بنسبة 5% ذلك يؤدي الى',
+    opts: ['زيادة الاسعار', 'ثبات الاسعار', 'انخفاض الاسعار', 'زيادة الكميات'],
+    ans: 2,
+    exp: 'لأن زيادة مرونة منحنى العرض (10%) تفوق زيادة مرونة منحنى الطلب (5%)، يميل السعر التوازني نحو الانخفاض.'
+  },
+  {
+    id: 'mb_6', model: 'monthly_b',
+    q: 'اذا كان التغير في السعر قد ادى الى تغير اقل في الكمية المطلوبة فهذا يعني ان الطلب',
+    opts: ['لا نهائي المرونة', 'عالي المرونة', 'قليل المرونة', 'عديم المرونة'],
+    ans: 2,
+    exp: 'إذا كانت نسبة التغير في الكمية المطلوبة أقل من نسبة التغير في السعر، يكون معامل المرونة أقل من 1، ويوصف الطلب بأنه قليل المرونة (غير مرن).'
+  },
+  {
+    id: 'mb_7', model: 'monthly_b',
+    q: 'تعتبر اسعار المستلزمات في دالة العرض متغير',
+    opts: ['مستقل', 'تابع', 'ثابت', 'ليس كل ما سبق'],
+    ans: 0,
+    exp: 'الكمية المعروضة هي المتغير التابع، بينما العوامل التي تؤثر في قرار الإنتاج مثل سعر السلعة وأسعار مستلزمات الإنتاج تُعد متغيرات مستقلة.'
+  },
+  {
+    id: 'mb_8', model: 'monthly_b',
+    q: 'في حالة ارتفاع الكمية المعروضة مع ثبات الكمية المطلوبة ذلك يعني',
+    opts: ['انخفاض الكميات', 'زيادة الكميات', 'ارتفاع الاسعار', 'ثبات الاسعار'],
+    ans: 1,
+    exp: 'انتقال العرض نحو الزيادة مع ثبات الطلب ينقل التوازن إلى نقطة ذات سعر أقل وكمية توازنية أكبر (زيادة الكميات).'
+  },
+  {
+    id: 'mb_9', model: 'monthly_b',
+    q: 'اذا كان ناتج مرونة الطلب التقاطعية موجب فهذا يعني ان السلعتين',
+    opts: ['مستقلتان', 'بديلتان', 'مكملتان', 'ليس كل ما سبق'],
+    ans: 1,
+    exp: 'الإشارة الموجبة للمرونة التقاطعية تعني وجود علاقة طردية بين سعر سلعة والكمية المطلوبة من الأخرى، وهذه سمة السلع البديلة مثل الشاي والقهوة.'
+  },
+  {
+    id: 'mb_10', model: 'monthly_b',
+    q: 'في حالة انخفاض مرونة منحنى العرض بنسبة 7% وانخفاض مرونة منحنى الطلب بنسبة 4% ذلك يؤدي الى',
+    opts: ['انخفاض الكميات', 'زيادة الاسعار', 'ثبات الاسعار', 'ثبات الكميات'],
+    ans: 0,
+    exp: 'انخفاض المرونة في كل من جانبي العرض والطلب معاً (خاصة بنسبة أكبر في العرض) يقلص استجابة السوق ويؤدي وفق النموذج المعتمد إلى انخفاض الكميات.'
+  },
+  {
+    id: 'mb_11', model: 'monthly_b',
+    q: 'في حالة انخفاض سعر السلعة X يؤثر ذلك على السلعة المكملة Y فيؤدي الى',
+    opts: ['ارتفاع السعر', 'ارتفاع الكميات', 'ثبات الاسعار', 'انخفاض السعر'],
+    ans: 0,
+    exp: 'انخفاض سعر السلعة X يزيد الطلب على السلعة المكملة لها Y، فينتقل منحنى الطلب على Y لليمين مما يرفع سعرها التوازني (الإجابة المعتمدة في النموذج).'
+  },
+  {
+    id: 'mb_12', model: 'monthly_b',
+    q: 'في حالة انخفاض منحنى الطلب مع ثبات منحنى العرض ذلك يؤدي الى',
+    opts: ['ارتفاع الكمية', 'انخفاض الاسعار', 'ارتفاع الاسعار', 'ليس كل ما سبق'],
+    ans: 1,
+    exp: 'تراجع الطلب مع ثبات العرض يؤدي إلى وجود فائض عرض مؤقت، فيضطر البائعون لخفض الأسعار حتى يعود التوازن عند سعر أقل.'
+  },
+  {
+    id: 'mb_13', model: 'monthly_b',
+    q: 'عندما يكون تغير طفيف في السعر يؤدي الى تغير كبير جدا في الكمية المطلوبة فان مرونة الطلب السعرية:',
+    opts: ['<span class="ltr">Ed=0</span>', '<span class="ltr">Ed&gt;1</span>', '<span class="ltr">Ed&lt;1</span>', '<span class="ltr">Ed=∞</span>'],
+    ans: 3,
+    exp: 'عبارة «تغير طفيف في السعر يؤدي إلى تغير كبير جداً في الكمية المطلوبة» هي التعريف الدقيق للطلب لانهائي المرونة (Ed=∞)، حيث يكون منحنى الطلب أفقياً.'
+  },
+  {
+    id: 'mb_14', model: 'monthly_b',
+    q: 'في حالة انخفاض الاسعار ولدى المستهلكين توقعات بالانخفاض بصورة اكبر يؤدي ذلك الى',
+    opts: ['زيادة الطلب', 'انخفاض الطلب', 'ثبات الطلب', 'ليس كل ما سبق'],
+    ans: 1,
+    exp: 'عندما يتوقع المستهلكون استمرار هبوط الأسعار مستقبلاً، يؤجلون الشراء حالياً انتظاراً للسعر الأرخص، مما يؤدي إلى انخفاض الطلب الحالي.'
+  },
+  {
+    id: 'mb_15', model: 'monthly_b',
+    q: 'في حالة ارتفاع الاسعار مع ثبات الكمية المطلوبة فان مرونة الطلب هي',
+    opts: ['لا نهائية', 'عالية', 'صفر', 'احادية'],
+    ans: 2,
+    exp: 'ثبات الكمية المطلوبة يعني أن التغير في الكمية يساوي صفراً، وبقسمة 0 على أي تغير في السعر تكون مرونة الطلب مساوية للصفر (عديم المرونة).'
+  },
+  {
+    id: 'mb_16', model: 'monthly_b',
+    q: 'عند انخفاض سعر سلعة ذات طلب قليل المرونة فان الايراد الكلي',
+    opts: ['ينخفض', 'يرتفع', 'يبقى ثابت', 'زيادة لا نهائية'],
+    ans: 0,
+    exp: 'في الطلب قليل المرونة تكون العلاقة بين السعر والإيراد الكلي طردية؛ لأن خفض السعر لن يجلب زيادة كافية في المبيعات لتعويض خسارة السعر، فينخفض الإيراد الكلي.'
+  },
+  {
+    id: 'mb_17', model: 'monthly_b',
+    q: 'في حالة زيادة مرونة منحنى الطلب بنسبة 11% وزيادة مرونة منحنى العرض بنسبة 15% ذلك يؤدي الى',
+    opts: ['انخفاض الكميات', 'انخفاض الاسعار', 'زيادة الاسعار', 'ليس كل ما سبق'],
+    ans: 1,
+    exp: 'لأن نسبة زيادة مرونة منحنى العرض (15%) تفوق نسبة زيادة مرونة منحنى الطلب (11%)، فإن الأثر النهائي يؤدي إلى انخفاض الأسعار التوازنية.'
+  },
+  {
+    id: 'mb_18', model: 'monthly_b',
+    q: 'اذا كان الطلب مرن فان الايراد الحدي:',
+    opts: ['سالب', 'صفر', 'موجب', 'ليس كل ما سبق'],
+    ans: 2,
+    exp: 'عندما يكون الطلب مرناً (أكبر من 1)، فإن زيادة المبيعات عبر خفض طفيف للسعر ترفع الإيراد الكلي، مما يعني أن الإيراد الحدي يكون موجباً.'
+  },
+  {
+    id: 'mb_19', model: 'monthly_b',
+    q: 'عند انخفاض الكمية المعروضة مع ثبات الكمية المطلوبة ذلك يؤدي الى',
+    opts: ['زيادة الكميات', 'انخفاض الاسعار', 'انخفاض الكميات', 'ليس كل ما سبق'],
+    ans: 2,
+    exp: 'انخفاض العرض مع بقاء الطلب ثابتاً يقلل الكمية التوازنية المتداولة في السوق ويرفع السعر التوازني.'
+  },
+  {
+    id: 'mb_20', model: 'monthly_b',
+    q: 'في حالة انخفاض الضرائب المفروضة فان الكمية المعروضة',
+    opts: ['تزداد', 'تنخفض', 'تبقى ثابتة', 'ليس كل ما سبق'],
+    ans: 0,
+    exp: 'خفض الضرائب يقلل الأعباء والتكاليف الإنتاجية على المنتج، مما يرفع هامش ربحه ويدفعه لزيادة الإنتاج والكمية المعروضة.'
+  },
+
+  // ================= نموذج A1 (المرونة والعرض والتوازن) (5) =================
+  {
+    id: 'eq1_1', model: 'eq_a1',
+    q: 'تستخدم مرونة القوس بصفة أساسية لقياس المرونة السعرية للطلب عندما تكون التغيرات بين النقطتين:',
+    opts: ['صغيرة', 'كبيرة', 'لا نهائية', 'عديمة'],
+    ans: 1,
+    exp: 'مرونة القوس تعطي قياساً دقيقاً للمرونة عند وجود تغيرات كبيرة بين نقطتين على المنحنى لأنها تعتمد على متوسط السعر ومتوسط الكمية.'
+  },
+  {
+    id: 'eq1_2', model: 'eq_a1',
+    q: 'إذا كان التغير النسبي في سعر سلعة بنسبة 4% يؤدي إلى تغير نسبي في الكمية المعروضة بنسبة 3% ، فإن العرض يكون:',
+    opts: ['عديم المرونة', 'عالي المرونة', 'قليل المرونة', 'لانهائي المرونة'],
+    ans: 2,
+    exp: 'مرونة العرض = 3% ÷ 4% = 0.75، وبما أنها أقل من الواحد الصحيح فإن العرض يكون قليل المرونة.'
+  },
+  {
+    id: 'eq1_3', model: 'eq_a1',
+    q: 'أن ارتفاع مرونة منحنى الطلب وإنخفاض مرونة منحنى العرض - في نفس الوقت - من شأنه أن يعزز:',
+    opts: ['ارتفاع السعر التوازني', 'لا يؤثر على السعر التوازني', 'انخفاض السعر التوازني', 'ليس ما سبق'],
+    ans: 0,
+    exp: 'انخفاض مرونة العرض (ضعف استجابة المنتجين) مع ارتفاع مرونة الطلب يعزز الضغط الصعودي على السعر التوازني في السوق.'
+  },
+  {
+    id: 'eq1_4', model: 'eq_a1',
+    q: 'تؤدي زيادة الضرائب المفروضة على إنتاج سلعة معينة إلى:',
+    opts: ['زيادة عرض السلعة', 'انخفاض تكلفة الإنتاج', 'تحسين الفن الإنتاجي', 'ارتفاع تكلفة الإنتاج'],
+    ans: 3,
+    exp: 'الضرائب المفروضة على الإنتاج تُعد عبئاً مالياً إضافياً يتحمله المنتج، مما يؤدي مباشرة إلى ارتفاع تكلفة الإنتاج ومن ثم انخفاض العرض.'
+  },
+  {
+    id: 'eq1_5', model: 'eq_a1',
+    q: 'يظهر لدينا فائض العرض عندما يكون السعر:',
+    opts: ['أعلى من السعر التوازني', 'يساوي السعر التوازني', 'أقل من السعر التوازني', 'يساوي للصفر'],
+    ans: 0,
+    exp: 'عندما يكون السعر السائد أعلى من السعر التوازني، يرغب المنتجون بعرض كميات كبيرة بينما يقلل المستهلكون طلبهم، فتكون الكمية المعروضة أكبر من المطلوبة (فائض عرض).'
+  },
+
+  // ================= نموذج A2 (المرونة والعرض والتوازن) (5) =================
+  {
+    id: 'eq2_1', model: 'eq_a2',
+    q: 'يؤثر ارتفاع أسعار مستلزمات الإنتاج على إمكانات عرض السلعة:',
+    opts: ['زيادة الإنتاج', 'انخفاض العرض', 'زيادة العرض', 'لا يؤثر على العرض'],
+    ans: 1,
+    exp: 'ارتفاع أسعار المواد الأولية ومستلزمات الإنتاج يرفع التكلفة الكلية على المنتج، مما يقلص قدرته الإنتاجية ويؤدي إلى انخفاض العرض وانتقال منحناه لليسار.'
+  },
+  {
+    id: 'eq2_2', model: 'eq_a2',
+    q: 'يظهر لدينا فائض طلب عندما يكون السعر:',
+    opts: ['أعلى من السعر التوازني', 'يساوي السعر التوازني', 'أقل من السعر التوازني', 'يساوي للصفر'],
+    ans: 2,
+    exp: 'عندما يكون السعر أقل من السعر التوازني، تزداد رغبة المستهلكين بالشراء وتقل رغبة المنتجين بالبيع، فتتفوق الكمية المطلوبة على المعروضة ويظهر فائض طلب (عجز).'
+  },
+  {
+    id: 'eq2_3', model: 'eq_a2',
+    q: 'المقصود بـ "التغير في الكمية المعروضة" هو:',
+    opts: ['انتقال منحنى العرض', 'تغيير أسعار المستلزمات', 'تغير تقنية الإنتاج', 'انتقال بين النقاط على نفس المنحنى'],
+    ans: 3,
+    exp: 'التغير في الكمية المعروضة ينشأ حصراً بسبب تغير سعر السلعة نفسها، ويتمثل بيانياً بالتحرك بين النقاط على نفس منحنى العرض.'
+  },
+  {
+    id: 'eq2_4', model: 'eq_a2',
+    q: 'إذا كان التغير النسبي في سعر سلعة بنسبة 2% يؤدي إلى تغير نسبي في الكمية المعروضة بنسبة 6% ، فإن العرض يكون:',
+    opts: ['عديم المرونة', 'عالي المرونة', 'قليل المرونة', 'لانهائي المرونة'],
+    ans: 1,
+    exp: 'مرونة العرض = 6% ÷ 2% = 3، وبما أن المعامل أكبر من 1 فالعرض عالي المرونة.'
+  },
+  {
+    id: 'eq2_5', model: 'eq_a2',
+    q: 'إذا ازدادت درجة مرونة منحنى العرض مع ثبات درجة مرونة منحنى الطلب فإن السعر التوازني:',
+    opts: ['ينخفض', 'يبقى ثابت', 'يرتفع', 'يرتفع ثم ينخفض'],
+    ans: 0,
+    exp: 'زيادة مرونة منحنى العرض تعني قدرة أكبر للمنتجين على توفير السلعة بسرعة واستجابة أكبر، مما يخفف الضغوط السعرية ويجعل السعر التوازني ينخفض.'
+  },
+
+  // ================= نموذج A1 (10) =================
+  {
+    id: 'q1_1', model: 'quiz_a1',
+    q: 'عندما تكون السلع بديلة فإن انخفاض سعر السلعة (X) يؤثر على السلعة (Y) فيؤدي الى:',
+    opts: ['ارتفاع الكمية المطلوبة للسلعة (Y)', 'انخفاض سعر السلعة (Y)', 'انخفاض الكمية المطلوبة للسلعة (Y)', 'ارتفاع سعر السلعة (Y)'],
+    ans: 2,
+    exp: 'عندما يرخص سعر السلعة X، يترك المستهلكون بديلتها الأغلى Y ويتجهون لشراء X، فتنخفض الكمية المطلوبة من السلعة Y.'
+  },
+  {
+    id: 'q1_2', model: 'quiz_a1',
+    q: 'عندما تكون إشارة مرونة الطلب الدخلية موجبة فأن:',
+    opts: ['السلعة بديلة', 'السلعة اعتيادية', 'السلعة رديئة', 'السلعة مكملة'],
+    ans: 1,
+    exp: 'الإشارة الموجبة لمرونة الطلب الدخلية تدل على أن زيادة الدخل ترفع الطلب على السلعة (علاقة طردية)، وهي سمة السلع الاعتيادية.'
+  },
+  {
+    id: 'q1_3', model: 'quiz_a1',
+    q: 'عندما تكون إشارة مرونة الطلب تقاطعيه سالبة فأن:',
+    opts: ['السلعتان مكملتان', 'السلعتان بديلتان', 'السلعتان مستقلتان', 'ليس ما سبق'],
+    ans: 0,
+    exp: 'الإشارة السالبة تعني أن ارتفاع سعر إحدى السلعتين يقلل الطلب على الأخرى، لأنهما تُستهلكان معاً، أي أنهما سلعتان مكملتان.'
+  },
+  {
+    id: 'q1_4', model: 'quiz_a1',
+    q: 'عندما لا يؤدي التغير النسبي في السعر الى تغير نسبي في الكمية المطلوبة فأن نوع درجة مرونة الطلب السعرية:',
+    opts: ['قليل المرونة', 'متكافئ المرونة', 'عديم المرونة', 'عالي المرونة'],
+    ans: 2,
+    exp: 'لأن البسط (التغير النسبي في الكمية) يساوي صفراً، فإن قيمة المرونة تساوي صفراً، ويكون الطلب عديم المرونة (مثل بعض الأدوية المنقذة للحياة).'
+  },
+  {
+    id: 'q1_5', model: 'quiz_a1',
+    q: 'عندما يكون تغير النسبي في السعر أكبر من التغير النسبي في الكمية المطلوبة فأن نوع درجة مرونة الطلب السعرية:',
+    opts: ['<span class="ltr">Ed=0</span>', '<span class="ltr">Ed&lt;1</span>', '<span class="ltr">Ed=∞</span>', '<span class="ltr">Ed&gt;1</span>'],
+    ans: 1,
+    exp: 'بما أن المقام (التغير النسبي في السعر) أكبر من البسط (التغير النسبي في الكمية)، فإن ناتج القسمة يكون أقل من 1 (Ed<1)، أي طلب قليل المرونة.'
+  },
+  {
+    id: 'q1_6', model: 'quiz_a1',
+    q: 'إذا كان الطلب قليل المرونة فان الايراد الحدي:',
+    opts: ['سالب', 'يساوي صفر', 'موجب', 'سالب ثم موجب'],
+    ans: 0,
+    exp: 'في الجزء غير المرن من منحنى الطلب (قليل المرونة)، يرافق زيادة الكمية المباعة انخفاض في الإيراد الكلي، وبالتالي يكون الإيراد الحدي سالباً.'
+  },
+  {
+    id: 'q1_7', model: 'quiz_a1',
+    q: 'في حالة توقع المستهلكين حصول ارتفاع كبير ومستقبلي قادم في سعر السلعة، فان الارتفاع الأولي البسيط في السعر يؤدي إلى:',
+    opts: ['انخفاض الكمية المطلوبة', 'ارتفاع الكمية المطلوبة', 'انعدام الطلب عليها', 'طلب لانهائي عليها'],
+    ans: 1,
+    exp: 'خوفاً من دفع أسعار أعلى مستقبلاً، يسارع المستهلكون إلى التخزين والشراء الآن رغم الارتفاع الأولي، فترتفع الكمية المطلوبة (أحد استثناءات قانون الطلب).'
+  },
+  {
+    id: 'q1_8', model: 'quiz_a1',
+    q: 'العلاقة بين ارتفاع دخل المستهلك والطلب على السلع الرديئة (الدنيا) هي:',
+    opts: ['علاقة طردية', 'علاقة عكسية', 'علاقة ثابتة', 'علاقة لانهائية'],
+    ans: 1,
+    exp: 'السلع الرديئة يتراجع الطلب عليها كلما تحسن دخل الفرد وزادت قدرته الشرائية، لذا فالعلاقة بين الدخل والطلب عليها عكسية.'
+  },
+  {
+    id: 'q1_9', model: 'quiz_a1',
+    q: 'عند انخفاض سعر السلعة ذات طلب عالي المرونة فان الإيراد الكلي:',
+    opts: ['ينخفض', 'يبقى ثابت', 'يرتفع', 'ليس ما سبق'],
+    ans: 2,
+    exp: 'لأن الطلب عالي المرونة، فإن خفض السعر يحفّز زيادة كبيرة جداً في المبيعات تفوق أثر التخفيض السعري، مما يؤدي إلى ارتفاع الإيراد الكلي.'
+  },
+  {
+    id: 'q1_10', model: 'quiz_a1',
+    q: 'الإيراد الكلي (TR) الذي يحققه المشروع هو نفسه:',
+    opts: ['التكلفة الكلية', 'الإيراد الحدي', 'الإنفاق الكلي', 'إجمالي الربح'],
+    ans: 2,
+    exp: 'ما يدفعه المستهلكون لشراء السلعة (السعر × الكمية) يمثل «الإنفاق الكلي» من وجهة نظر المستهلك، وهو بالضبط «الإيراد الكلي» الذي يستلمه المشروع.'
+  },
+
+  // ================= نموذج A2 (10) =================
+  {
+    id: 'q2_1', model: 'quiz_a2',
+    q: 'عندما تكون السلع مكملة فأن انخفاض سعر السلعة (X) يؤثر على السلعة (Y) فيؤدي الى:',
+    opts: ['ارتفاع الكمية المطلوبة للسلعة (Y)', 'انخفاض سعر السلعة (Y)', 'انخفاض الكمية المطلوبة للسلعة (Y)', 'ارتفاع سعر السلعة (Y)'],
+    ans: 0,
+    exp: 'بما أن السلعتين تُستخدمان معاً، فإن انخفاض سعر X يشجع على شرائها وبالتالي يرفع الطلب والكمية المطلوبة من السلعة المكملة Y.'
+  },
+  {
+    id: 'q2_2', model: 'quiz_a2',
+    q: 'عندما تكون إشارة مرونة الطلب الدخلية سالبة فأن:',
+    opts: ['السلعة بديلة', 'السلعة اعتيادية', 'السلعة رديئة', 'السلعة مكملة'],
+    ans: 2,
+    exp: 'الإشارة السالبة للمرونة الدخلية تعني علاقة عكسية بين الدخل والطلب، وهي الخاصية المميزة للسلع الرديئة (الدنيا).'
+  },
+  {
+    id: 'q2_3', model: 'quiz_a2',
+    q: 'عندما تكون إشارة مرونة الطلب تقاطعيه موجبة فأن:',
+    opts: ['السلعتان مكملتان', 'السلعتان بديلتان', 'السلعتان مستقلتان', 'ليس ما سبق'],
+    ans: 1,
+    exp: 'تكون المرونة التقاطعية موجبة إذا أدى ارتفاع سعر سلعة إلى زيادة الطلب على الأخرى، وهو ما يحدث فقط بين السلع البديلة.'
+  },
+  {
+    id: 'q2_4', model: 'quiz_a2',
+    q: 'عندما يؤدي التغير النسبي في السعر الى تغير نسبي أقل في الكمية المطلوبة فأن نوع درجة مرونة الطلب السعرية:',
+    opts: ['قليل المرونة', 'متكافئ المرونة', 'عديم المرونة', 'عالي المرونة'],
+    ans: 0,
+    exp: 'استجابة الكمية بنسبة أقل من نسبة تغير السعر تجعل معامل المرونة محصوراً بين 0 و1، أي أن الطلب قليل المرونة.'
+  },
+  {
+    id: 'q2_5', model: 'quiz_a2',
+    q: 'عندما يكون تغير طفيف في السعر يؤدي الى تغير كبير جدا في الكمية المطلوبة فأن نوع درجة مرونة الطلب السعرية:',
+    opts: ['<span class="ltr">Ed=0</span>', '<span class="ltr">Ed&gt;1</span>', '<span class="ltr">Ed=∞</span>', '<span class="ltr">Ed=1</span>'],
+    ans: 2,
+    exp: 'تغير طفيف جداً في السعر يسبب تغيراً ضخماً جداً في الكمية المطلوبة يعبّر عن حالة الطلب لانهائي المرونة (Ed=∞).'
+  },
+  {
+    id: 'q2_6', model: 'quiz_a2',
+    q: 'عند انخفاض سعر السلع الدنيا يؤدي الى:',
+    opts: ['ارتفاع الكمية المطلوبة منها', 'انخفاض الكمية المطلوبة منها', 'تبقى ثابتة', 'ليس ما سبق'],
+    ans: 1,
+    exp: 'في حالة السلع الدنيا (سلع جيفن)، يطغى أثر الدخل السلبي على أثر الإحلال، فينخفض إقبال المستهلك عليها عندما ينخفض سعرها.'
+  },
+  {
+    id: 'q2_7', model: 'quiz_a2',
+    q: 'إذا كان الطلب مرن فان الإيراد الحدي:',
+    opts: ['سالب', 'يساوي صفر', 'موجب', 'سالب ثم موجب'],
+    ans: 2,
+    exp: 'عندما يكون الطلب مرناً، ترتفع الإيرادات الكلية مع بيع كل وحدة إضافية، مما يجعل قيمة الإيراد الحدي موجبة.'
+  },
+  {
+    id: 'q2_8', model: 'quiz_a2',
+    q: 'إذا أدى ارتفاع دخل المستهلك إلى انخفاض الكمية المطلوبة من سلعة ما، فإن السلعة تكون:',
+    opts: ['كمالية', 'استفزازية', 'رديئة', 'مكملة'],
+    ans: 2,
+    exp: 'تراجع استهلاك السلعة عند تحسن دخل المستهلك يثبت أنها سلعة رديئة (دنيا) يستغني عنها لصالح بدائل أعلى جودة.'
+  },
+  {
+    id: 'q2_9', model: 'quiz_a2',
+    q: 'في حالة توقع المستهلكين حصول انخفاض كبير ومستقبلي قادم في سعر السلعة، فإن الانخفاض الأولي البسيط في السعر يؤدي إلى:',
+    opts: ['انخفاض الكمية المطلوبة', 'ارتفاع الكمية المطلوبة', 'انعدام الطلب عليها', 'طلب لانهائي عليها'],
+    ans: 0,
+    exp: 'بسبب توقع هبوط أكبر في السعر قريباً، يتريث المستهلكون ويحجمون عن الشراء حالياً، فتنخفض الكمية المطلوبة رغم الهبوط الأولي للسعر.'
+  },
+  {
+    id: 'q2_10', model: 'quiz_a2',
+    q: 'عند انخفاض سعر السلعة قليلة المرونة فان الإيراد الكلي:',
+    opts: ['ينخفض', 'يبقى ثابت', 'يرتفع', 'ليس ما سبق'],
+    ans: 0,
+    exp: 'لأن الزيادة في الكمية المباعة ستكون ضعيفة ولا تعوض الخسارة الناتجة عن خفض السعر، فينخفض الإيراد الكلي (علاقة طردية مع السعر).'
+  },
+
+  // ================= نموذج A3 (10) =================
+  {
+    id: 'q3_1', model: 'quiz_a3',
+    q: 'عندما تكون السلع البديلة فان ارتفاع سعر السلعة (X) يؤثر على السلعة (Y) فيؤدي الى:',
+    opts: ['ارتفاع الكمية المطلوبة للسلعة (Y)', 'انخفاض سعر السلعة (Y)', 'انخفاض الكمية المطلوبة للسلعة (Y)', 'ارتفاع سعر السلعة (Y)'],
+    ans: 0,
+    exp: 'ارتفاع سعر X يجعل البديلة Y أرخص نسبياً، فينصرف المستهلكون عن X لشراء Y مما يؤدي إلى ارتفاع الكمية المطلوبة من السلعة Y.'
+  },
+  {
+    id: 'q3_2', model: 'quiz_a3',
+    q: 'عندما تكون إشارة مرونة الطلب تقاطعية سالبة فأن:',
+    opts: ['السلعتان مكملتان', 'السلعتان بديلتان', 'السلعتان مستقلتان', 'ليس ما سبق'],
+    ans: 0,
+    exp: 'الإشارة السالبة تعكس علاقة عكسية بين سعر سلعة والطلب على الأخرى، وهو الدليل على أن السلعتين مكملتان لبعضهما.'
+  },
+  {
+    id: 'q3_3', model: 'quiz_a3',
+    q: 'عندما تكون مرونة الطلب تقاطعيه تساوي صفر فأن:',
+    opts: ['السلعتان مكملتان', 'السلعتان بديلتان', 'السلعتان مستقلتان', 'ليس ما سبق'],
+    ans: 2,
+    exp: 'تساوي المرونة التقاطعية الصفر عندما لا يؤثر تغير سعر إحدى السلعتين إطلاقاً في الطلب على الأخرى (مثل الملح والهواتف)، أي أنهما مستقلتان.'
+  },
+  {
+    id: 'q3_4', model: 'quiz_a3',
+    q: 'عندما يكون تغير النسبي في السعر اقل من التغير النسبي في الكمية المطلوبة فان نوع درجة مرونة الطلب السعرية:',
+    opts: ['قليل المرونة', 'متكافئ المرونة', 'عديم المرونة', 'عالي المرونة'],
+    ans: 3,
+    exp: 'كون التغير النسبي في الكمية أكبر من التغير النسبي في السعر يعني أن معامل المرونة أكبر من 1، فالطلب عالي المرونة.'
+  },
+  {
+    id: 'q3_5', model: 'quiz_a3',
+    q: 'عندما يكون تغير النسبي في السعر لا يؤدي الى تغير النسبي في الكمية المطلوبة فان منحنى الطلب يكون على شكل:',
+    opts: ['عمودي', 'أفقي', 'بزاوية 45', 'ليس ما ذكر'],
+    ans: 0,
+    exp: 'ثبات الكمية المطلوبة مهما تغير السعر يعني طلباً عديم المرونة، ويكون تمثيله البياني خطاً عمودياً موازياً لمحور السعر.'
+  },
+  {
+    id: 'q3_6', model: 'quiz_a3',
+    q: 'إذا كان الطلب أحادي المرونة فان الإيراد الحدي:',
+    opts: ['سالب', 'يساوي صفر', 'موجب', 'يساوي واحد'],
+    ans: 1,
+    exp: 'عند الطلب أحادي (متكافئ) المرونة (Ed=1) يصل الإيراد الكلي إلى أعلى قيمة ممكنة له ولا يتغير، وبالتالي يكون الإيراد الحدي مساوياً للصفر.'
+  },
+  {
+    id: 'q3_7', model: 'quiz_a3',
+    q: 'إذا أدى ارتفاع سعر السلعة إلى ارتفاع الكمية المطلوبة منها، فإن السلعة تكون:',
+    opts: ['كمالية', 'استفزازية', 'رديئة', 'مكملة'],
+    ans: 1,
+    exp: 'السلع الاستفزازية (سلع التفاخر أو فيبلن مثل المجوهرات النادرة واللوحات الفنية) تزداد جاذبيتها وطلبها كلما ارتفع سعرها بدافع التباهي.'
+  },
+  {
+    id: 'q3_8', model: 'quiz_a3',
+    q: 'عند انخفاض سعر السلع الدنيا يؤدي الى:',
+    opts: ['ارتفاع الكمية المطلوبة منها', 'انخفاض الكمية المطلوبة منها', 'تبقى ثابتة', 'ليس ما سبق'],
+    ans: 1,
+    exp: 'تُعد السلع الدنيا استثناءً من قانون الطلب، حيث يؤدي هبوط سعرها إلى تراجع الكمية المطلوبة منها وتحول المستهلك لسلع أفضل.'
+  },
+  {
+    id: 'q3_9', model: 'quiz_a3',
+    q: 'عند انخفاض سعر السلعة ذات طلب عديم المرونة فان الإيراد الكلي:',
+    opts: ['ينخفض', 'يبقى ثابت', 'يرتفع', 'ليس ما سبق'],
+    ans: 0,
+    exp: 'لأن الكمية المباعة لا تتغير إطلاقاً في الطلب عديم المرونة، فإن خفض السعر سيؤدي مباشرة وبنفس النسبة إلى انخفاض الإيراد الكلي.'
+  },
+  {
+    id: 'q3_10', model: 'quiz_a3',
+    q: 'يمكن الحصول على الايراد الحدي من خلال:',
+    opts: ['<span class="ltr">ΔTR</span> مقسوما على <span class="ltr">ΔP</span>', '<span class="ltr">ΔTR</span> مقسوما على <span class="ltr">ΔQ</span>', '<span class="ltr">ΔMR</span> مقسوما على <span class="ltr">ΔP</span>', 'ليس ما ذكر'],
+    ans: 1,
+    exp: 'الإيراد الحدي (MR) هو مقدار التغير في الإيراد الكلي (ΔTR) الناتج عن بيع وحدة إضافية واحدة من الإنتاج، أي مقسوماً على التغير في الكمية (ΔQ).'
+  }
+];
+
+// ================= STATE & STORAGE =================
+const STORAGE_KEY = 'micro_econ_quiz_v1';
+let state = {
+  mistakes: [],
+  bookmarks: [],
+  mastered: [],
+  bestScores: {},
+  theme: 'dark',
+  fontScale: 1,
+  sound: true,
+  quizMode: 'study'
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) Object.assign(state, JSON.parse(raw));
+  } catch (e) {}
+}
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {}
+}
+
+// ================= SOUND (Web Audio API) =================
+let audioCtx = null;
+function playTone(isCorrect) {
+  if (!state.sound) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    const now = audioCtx.currentTime;
+    if (isCorrect) {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.12);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc.start(now);
+      osc.stop(now + 0.22);
+    } else {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(240, now);
+      osc.frequency.exponentialRampToValueAtTime(160, now + 0.16);
+      gain.gain.setValueAtTime(0.09, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc.start(now);
+      osc.stop(now + 0.22);
+    }
+  } catch (e) {}
+}
+
+// ================= THEME & FONT =================
+const THEMES = ['dark', 'sepia', 'light'];
+const THEME_ICONS = { dark: '🌙', sepia: '📜', light: '☀️' };
+
+function applyPrefs() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+  document.getElementById('btnTheme').textContent = THEME_ICONS[state.theme] || '🌙';
+  document.documentElement.style.setProperty('--font-scale', state.fontScale);
+  document.getElementById('btnSound').textContent = state.sound ? '🔊' : '🔇';
+  document.querySelectorAll('.mode-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.mode === state.quizMode);
+  });
+}
+
+document.getElementById('btnTheme').onclick = () => {
+  const idx = (THEMES.indexOf(state.theme) + 1) % THEMES.length;
+  state.theme = THEMES[idx];
+  applyPrefs();
+  saveState();
+};
+document.getElementById('btnSound').onclick = () => {
+  state.sound = !state.sound;
+  applyPrefs();
+  saveState();
+};
+document.getElementById('btnFontUp').onclick = () => {
+  state.fontScale = Math.min(1.25, +(state.fontScale + 0.08).toFixed(2));
+  applyPrefs();
+  saveState();
+};
+document.getElementById('btnFontDown').onclick = () => {
+  state.fontScale = Math.max(0.84, +(state.fontScale - 0.08).toFixed(2));
+  applyPrefs();
+  saveState();
+};
+
+function setQuizMode(mode) {
+  state.quizMode = mode;
+  applyPrefs();
+  saveState();
+}
+
+// ================= VIEWS & HOME =================
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function getModelTitle(modelId) {
+  const m = MODELS.find(x => x.id === modelId);
+  return m ? m.title : '';
+}
+
+function renderHome() {
+  document.getElementById('statTotal').textContent = QUESTIONS.length;
+  document.getElementById('statMastered').textContent = state.mastered.length;
+  document.getElementById('statMistakes').textContent = state.mistakes.length;
+  document.getElementById('statBookmarks').textContent = state.bookmarks.length;
+  document.getElementById('mistakesBtnCount').textContent = state.mistakes.length;
+  document.getElementById('bookmarksBtnCount').textContent = state.bookmarks.length;
+  document.getElementById('btnReviewMistakes').disabled = state.mistakes.length === 0;
+  document.getElementById('btnReviewBookmarks').disabled = state.bookmarks.length === 0;
+
+  const monthlyGrid = document.getElementById('monthlyGrid');
+  const otherGrid = document.getElementById('otherGrid');
+  monthlyGrid.innerHTML = '';
+  otherGrid.innerHTML = '';
+
+  MODELS.forEach(m => {
+    const count = QUESTIONS.filter(q => q.model === m.id).length;
+    const best = state.bestScores[m.id];
+    const card = document.createElement('div');
+    card.className = 'model-card ' + (m.group === 'monthly' ? 'monthly-card' : 'regular-card');
+    card.onclick = () => startModelQuiz(m.id, m.title);
+    card.innerHTML = `
+      <div>
+        <div class="model-top">
+          <div class="model-title">${m.title}</div>
+          <span class="model-count">${count} سؤال</span>
+        </div>
+        <div class="model-desc" style="margin-top:6px;">${m.desc}</div>
+      </div>
+      <div class="model-footer">
+        <span>ابدأ الاختبار ←</span>
+        ${best !== undefined ? `<span class="best-score">أعلى نتيجة: ${best}%</span>` : ''}
+      </div>
+    `;
+    (m.group === 'monthly' ? monthlyGrid : otherGrid).appendChild(card);
+  });
+
+  // Combined Monthly Card
+  const mCombined = document.createElement('div');
+  mCombined.className = 'model-card special-card';
+  mCombined.onclick = () => startSpecial('monthly_all');
+  mCombined.innerHTML = `
+    <div>
+      <div class="model-top">
+        <div class="model-title">اختبار الشهري المدمج (A + B)</div>
+        <span class="model-count">40 سؤال</span>
+      </div>
+      <div class="model-desc" style="margin-top:6px;">تدريب متكامل يجمع نموذجي الامتحان الشهري معاً</div>
+    </div>
+    <div class="model-footer">
+      <span>ابدأ الاختبار ←</span>
+      ${state.bestScores['monthly_all'] !== undefined ? `<span class="best-score">أعلى نتيجة: ${state.bestScores['monthly_all']}%</span>` : ''}
+    </div>
+  `;
+  monthlyGrid.appendChild(mCombined);
+
+  // Combined Other Card
+  const oCombined = document.createElement('div');
+  oCombined.className = 'model-card special-card';
+  oCombined.onclick = () => startSpecial('other_all');
+  oCombined.innerHTML = `
+    <div>
+      <div class="model-top">
+        <div class="model-title">كل الكوزات والنماذج الأخرى</div>
+        <span class="model-count">40 سؤال</span>
+      </div>
+      <div class="model-desc" style="margin-top:6px;">يجمع النماذج الخمسة الإضافية في اختبار واحد</div>
+    </div>
+    <div class="model-footer">
+      <span>ابدأ الاختبار ←</span>
+      ${state.bestScores['other_all'] !== undefined ? `<span class="best-score">أعلى نتيجة: ${state.bestScores['other_all']}%</span>` : ''}
+    </div>
+  `;
+  otherGrid.appendChild(oCombined);
+}
+
+// ================= QUIZ ENGINE =================
+let activeQuiz = {
+  key: '',
+  title: '',
+  items: [], // { qObj, shuffledOpts: [{text, origIdx}], userAnsOrigIdx: null }
+  index: 0,
+  streak: 0,
+  seconds: 0,
+  timerId: null
+};
+
+function shuffleArr(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startModelQuiz(modelId, title) {
+  const qs = QUESTIONS.filter(q => q.model === modelId);
+  initQuiz(modelId, title, qs);
+}
+
+function startSpecial(type) {
+  let qs = [], title = '';
+  if (type === 'all') {
+    qs = QUESTIONS;
+    title = 'الاختبار الشامل (80 سؤالاً)';
+  } else if (type === 'monthly_all') {
+    qs = QUESTIONS.filter(q => q.model === 'monthly_a' || q.model === 'monthly_b');
+    title = 'اختبار الامتحان الشهري المدمج (A + B)';
+  } else if (type === 'other_all') {
+    qs = QUESTIONS.filter(q => q.model !== 'monthly_a' && q.model !== 'monthly_b');
+    title = 'اختبار بقية النماذج والكوزات';
+  } else if (type === 'mistakes') {
+    qs = QUESTIONS.filter(q => state.mistakes.includes(q.id));
+    title = 'تدريب على بنك الأخطاء';
+  } else if (type === 'bookmarks') {
+    qs = QUESTIONS.filter(q => state.bookmarks.includes(q.id));
+    title = 'الأسئلة المحفوظة للمراجعة';
+  }
+  if (!qs.length) return;
+  initQuiz(type, title, qs);
+}
+
+function initQuiz(key, title, qs) {
+  const doShuffleQ = document.getElementById('chkShuffleQ').checked;
+  const doShuffleO = document.getElementById('chkShuffleO').checked;
+  const list = doShuffleQ ? shuffleArr(qs) : qs.slice();
+
+  activeQuiz.key = key;
+  activeQuiz.title = title;
+  activeQuiz.items = list.map(qObj => {
+    const optsMapped = qObj.opts.map((text, origIdx) => ({ text, origIdx }));
+    return {
+      qObj,
+      shuffledOpts: doShuffleO ? shuffleArr(optsMapped) : optsMapped,
+      userAnsOrigIdx: null
+    };
+  });
+  activeQuiz.index = 0;
+  activeQuiz.streak = 0;
+  activeQuiz.seconds = 0;
+
+  clearInterval(activeQuiz.timerId);
+  activeQuiz.timerId = setInterval(() => {
+    activeQuiz.seconds++;
+    document.getElementById('quizTimer').textContent = formatTime(activeQuiz.seconds);
+  }, 1000);
+
+  document.getElementById('quizTitle').textContent = title;
+  document.getElementById('quizTimer').textContent = '00:00';
+  document.getElementById('qMapWrap').classList.remove('show');
+  showView('viewQuiz');
+  renderQuestion();
+}
+
+function formatTime(sec) {
+  const m = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+const ARABIC_LETTERS = ['أ', 'ب', 'ج', 'د'];
+
+function renderQuestion() {
+  const item = activeQuiz.items[activeQuiz.index];
+  const q = item.qObj;
+  const total = activeQuiz.items.length;
+
+  document.getElementById('quizCounter').textContent = `${activeQuiz.index + 1} / ${total}`;
+  document.getElementById('progressFill').style.width = `${((activeQuiz.index + 1) / total) * 100}%`;
+  document.getElementById('qSourceTag').textContent = getModelTitle(q.model);
+  document.getElementById('qText').innerHTML = `${activeQuiz.index + 1}. ${q.q}`;
+
+  const streakEl = document.getElementById('quizStreak');
+  if (state.quizMode === 'study' && activeQuiz.streak >= 2) {
+    streakEl.style.display = 'inline-block';
+    streakEl.textContent = `🔥 ${activeQuiz.streak}`;
+  } else {
+    streakEl.style.display = 'none';
+  }
+
+  const isBookmarked = state.bookmarks.includes(q.id);
+  const bmBtn = document.getElementById('btnBookmark');
+  bmBtn.textContent = isBookmarked ? '★ محفوظ' : '☆ حفظ';
+  bmBtn.classList.toggle('active', isBookmarked);
+
+  const optsWrap = document.getElementById('optionsList');
+  optsWrap.innerHTML = '';
+
+  const isAnswered = item.userAnsOrigIdx !== null;
+  const showFeedback = state.quizMode === 'study' && isAnswered;
+
+  item.shuffledOpts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${ARABIC_LETTERS[i]}</span><span>${opt.text}</span>`;
+
+    if (showFeedback) {
+      btn.disabled = true;
+      if (opt.origIdx === q.ans) btn.classList.add('correct');
+      else if (opt.origIdx === item.userAnsOrigIdx) btn.classList.add('wrong');
+    } else if (isAnswered && opt.origIdx === item.userAnsOrigIdx) {
+      btn.classList.add('selected');
+    }
+
+    btn.onclick = () => selectOption(opt.origIdx);
+    optsWrap.appendChild(btn);
+  });
+
+  const expBox = document.getElementById('explanationBox');
+  const expTitle = document.getElementById('expTitle');
+  const expText = document.getElementById('expText');
+
+  if (showFeedback) {
+    const isCorrect = item.userAnsOrigIdx === q.ans;
+    expBox.className = 'explanation-box show ' + (isCorrect ? 'is-correct' : 'is-wrong');
+    expTitle.textContent = isCorrect ? '✅ إجابة صحيحة — التوضيح:' : '❌ إجابة خاطئة — شرح الإجابة الصحيحة:';
+    expText.innerHTML = q.exp;
+  } else {
+    expBox.className = 'explanation-box';
+  }
+
+  document.getElementById('btnPrev').disabled = activeQuiz.index === 0;
+  const isLast = activeQuiz.index === total - 1;
+  document.getElementById('btnNext').style.display = isLast ? 'none' : 'inline-block';
+  document.getElementById('btnFinish').style.display = isLast ? 'inline-block' : 'none';
+
+  renderMap();
+}
+
+function selectOption(origIdx) {
+  const item = activeQuiz.items[activeQuiz.index];
+  if (state.quizMode === 'study' && item.userAnsOrigIdx !== null) return;
+
+  item.userAnsOrigIdx = origIdx;
+  const q = item.qObj;
+  const isCorrect = origIdx === q.ans;
+
+  if (state.quizMode === 'study') {
+    playTone(isCorrect);
+    if (isCorrect) {
+      activeQuiz.streak++;
+      markMastered(q.id);
+    } else {
+      activeQuiz.streak = 0;
+      markMistake(q.id);
+    }
+    saveState();
+  }
+  renderQuestion();
+}
+
+function markMastered(id) {
+  if (!state.mastered.includes(id)) state.mastered.push(id);
+  state.mistakes = state.mistakes.filter(x => x !== id);
+}
+function markMistake(id) {
+  if (!state.mistakes.includes(id)) state.mistakes.push(id);
+}
+
+function nextQuestion() {
+  if (activeQuiz.index < activeQuiz.items.length - 1) {
+    activeQuiz.index++;
+    renderQuestion();
+  }
+}
+function prevQuestion() {
+  if (activeQuiz.index > 0) {
+    activeQuiz.index--;
+    renderQuestion();
+  }
+}
+
+function toggleCurrentBookmark() {
+  const id = activeQuiz.items[activeQuiz.index].qObj.id;
+  if (state.bookmarks.includes(id)) {
+    state.bookmarks = state.bookmarks.filter(x => x !== id);
+  } else {
+    state.bookmarks.push(id);
+  }
+  saveState();
+  renderQuestion();
+}
+
+function toggleMap() {
+  document.getElementById('qMapWrap').classList.toggle('show');
+}
+
+function renderMap() {
+  const grid = document.getElementById('qMapGrid');
+  grid.innerHTML = '';
+  activeQuiz.items.forEach((it, i) => {
+    const b = document.createElement('button');
+    b.className = 'q-dot';
+    b.textContent = i + 1;
+    if (i === activeQuiz.index) b.classList.add('current');
+    if (it.userAnsOrigIdx !== null) {
+      if (state.quizMode === 'study') {
+        b.classList.add(it.userAnsOrigIdx === it.qObj.ans ? 'correct' : 'wrong');
+      } else {
+        b.classList.add('answered');
+      }
+    }
+    b.onclick = () => {
+      activeQuiz.index = i;
+      renderQuestion();
+    };
+    grid.appendChild(b);
+  });
+}
+
+function confirmExit() {
+  clearInterval(activeQuiz.timerId);
+  goHome();
+}
+
+function goHome() {
+  clearInterval(activeQuiz.timerId);
+  renderHome();
+  showView('viewHome');
+}
+
+// ================= FINISH & RESULTS =================
+let lastWrongItems = [];
+
+function finishQuiz() {
+  clearInterval(activeQuiz.timerId);
+
+  let correct = 0;
+  lastWrongItems = [];
+
+  activeQuiz.items.forEach(it => {
+    const isOk = it.userAnsOrigIdx === it.qObj.ans;
+    if (isOk) {
+      correct++;
+      markMastered(it.qObj.id);
+    } else {
+      lastWrongItems.push(it.qObj);
+      if (it.userAnsOrigIdx !== null) markMistake(it.qObj.id);
+    }
+  });
+
+  const total = activeQuiz.items.length;
+  const wrong = total - correct;
+  const pct = Math.round((correct / total) * 100);
+
+  if (activeQuiz.key && activeQuiz.key !== 'mistakes' && activeQuiz.key !== 'bookmarks') {
+    const prev = state.bestScores[activeQuiz.key] || 0;
+    if (pct > prev) state.bestScores[activeQuiz.key] = pct;
+  }
+  saveState();
+
+  document.getElementById('resPercent').textContent = pct + '%';
+  document.getElementById('resCorrect').textContent = correct;
+  document.getElementById('resWrong').textContent = wrong;
+  document.getElementById('resTime').textContent = formatTime(activeQuiz.seconds);
+
+  const ring = document.getElementById('ringFg');
+  const circ = 326.7;
+  ring.style.stroke = pct >= 80 ? 'var(--success)' : pct >= 50 ? 'var(--warning)' : 'var(--danger)';
+  setTimeout(() => {
+    ring.style.strokeDashoffset = circ - (circ * pct) / 100;
+  }, 60);
+
+  let msg = 'مستوى ممتاز جداً! 🎯';
+  if (pct < 50) msg = 'تحتاج مراجعة إضافية للشروحات 💪';
+  else if (pct < 75) msg = 'جيد جداً، راجع أخطاءك لتثبيت المادة 👍';
+  else if (pct < 90) msg = 'أداء رائع وقريب من الدرجة الكاملة 🌟';
+
+  document.getElementById('resMsg').textContent = msg;
+  document.getElementById('resSub').textContent = activeQuiz.title;
+  document.getElementById('btnRetryWrong').style.display = lastWrongItems.length > 0 ? 'inline-block' : 'none';
+
+  document.querySelectorAll('#viewResults .filter-chip').forEach((c, idx) => c.classList.toggle('active', idx === 0));
+  renderReviewList('all');
+  showView('viewResults');
+}
+
+function filterReview(type, btn) {
+  document.querySelectorAll('#viewResults .filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderReviewList(type);
+}
+
+function renderReviewList(filter) {
+  const wrap = document.getElementById('reviewList');
+  wrap.innerHTML = '';
+
+  const filtered = activeQuiz.items.filter(it => {
+    const ok = it.userAnsOrigIdx === it.qObj.ans;
+    if (filter === 'correct') return ok;
+    if (filter === 'wrong') return !ok;
+    return true;
+  });
+
+  if (!filtered.length) {
+    wrap.innerHTML = '<div class="empty-state">لا توجد أسئلة ضمن هذا التصنيف 🎉</div>';
+    return;
+  }
+
+  filtered.forEach((it, idx) => {
+    const q = it.qObj;
+    const ok = it.userAnsOrigIdx === q.ans;
+    const userTxt = it.userAnsOrigIdx !== null ? q.opts[it.userAnsOrigIdx] : 'لم يتم الحل';
+    const rightTxt = q.opts[q.ans];
+
+    const div = document.createElement('div');
+    div.className = 'review-card ' + (ok ? 'ok' : 'bad');
+    div.innerHTML = `
+      <div class="review-q">${idx + 1}. ${q.q}</div>
+      ${!ok ? `<div class="review-line" style="color:var(--danger)">✘ إجابتك: ${userTxt}</div>` : ''}
+      <div class="review-line" style="color:var(--success); font-weight:700;">✔ الإجابة الصحيحة: ${rightTxt}</div>
+      <div class="review-exp">💡 <b>الشرح:</b> ${q.exp}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function retryWrongOnly() {
+  if (!lastWrongItems.length) return;
+  initQuiz('retry_wrong', 'إعادة الأسئلة الخاطئة — ' + activeQuiz.title, lastWrongItems);
+}
+
+function retryCurrentQuiz() {
+  const qs = activeQuiz.items.map(x => x.qObj);
+  initQuiz(activeQuiz.key, activeQuiz.title, qs);
+}
+
+// ================= STUDY CATALOG =================
+let catalogFilter = 'all';
+let hideCatalogAnswers = false;
+
+function openStudyCatalog() {
+  const fWrap = document.getElementById('catalogFilters');
+  fWrap.innerHTML = `<button class="filter-chip active" onclick="setCatalogFilter('all', this)">الكل (80)</button>`;
+  MODELS.forEach(m => {
+    fWrap.innerHTML += `<button class="filter-chip" onclick="setCatalogFilter('${m.id}', this)">${m.title}</button>`;
+  });
+  catalogFilter = 'all';
+  document.getElementById('catalogSearch').value = '';
+  renderCatalog();
+  showView('viewCatalog');
+}
+
+function setCatalogFilter(id, btn) {
+  catalogFilter = id;
+  document.querySelectorAll('#catalogFilters .filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderCatalog();
+}
+
+function toggleHideCatalogAnswers() {
+  hideCatalogAnswers = !hideCatalogAnswers;
+  const btn = document.getElementById('btnHideAnswers');
+  btn.classList.toggle('active', hideCatalogAnswers);
+  btn.textContent = hideCatalogAnswers ? '👁️ إظهار الإجابات' : '👁️ إخفاء الإجابات';
+  renderCatalog();
+}
+
+function renderCatalog() {
+  const qText = document.getElementById('catalogSearch').value.trim().toLowerCase();
+  const list = document.getElementById('catalogList');
+  list.innerHTML = '';
+
+  const filtered = QUESTIONS.filter(q => {
+    if (catalogFilter !== 'all' && q.model !== catalogFilter) return false;
+    if (!qText) return true;
+    const hay = (q.q + ' ' + q.opts.join(' ') + ' ' + q.exp).toLowerCase();
+    return hay.includes(qText);
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state">لا توجد نتائج مطابقة لبحثك.</div>';
+    return;
+  }
+
+  filtered.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'study-card';
+    div.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;">
+        <span class="q-source-tag">${getModelTitle(q.model)}</span>
+        <span style="font-size:0.78rem; color:var(--text-muted);">#${idx + 1}</span>
+      </div>
+      <div style="font-weight:700; font-size:1rem;">${q.q}</div>
+      <div class="study-answer-wrap ${hideCatalogAnswers ? 'blurred' : ''}" onclick="this.classList.remove('blurred')">
+        <div style="color:var(--success); font-weight:700; margin-bottom:6px;">✔ الإجابة الصحيحة: ${q.opts[q.ans]}</div>
+        <div style="font-size:0.88rem; color:var(--text-muted); line-height:1.65;">💡 ${q.exp}</div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ================= INIT =================
+loadState();
+applyPrefs();
+renderHome();
+</script>
+</body>
+</html>
